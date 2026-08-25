@@ -1,4 +1,4 @@
-# 译字
+# AI漫画编剧大师
 
 成页已经画好了。还差能读的中文。
 
@@ -6,7 +6,7 @@
 
 不另生新页。不另生图。图不上网。
 
-[下载 1.0 源码包](https://github.com/h1neolzr7f/yizi/releases/tag/v1.0.0) · MIT
+开源仓库名是 `yizi`。[下载 1.0 源码包](https://github.com/h1neolzr7f/yizi/releases/tag/v1.0.0) · MIT
 
 ## 它做什么
 

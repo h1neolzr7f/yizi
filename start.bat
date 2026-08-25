@@ -1,6 +1,6 @@
 @echo off
 cd /d "%~dp0"
-title 译字 · AI漫画编剧大师
+title AI漫画编剧大师
 if exist ".venv\Scripts\pythonw.exe" (
   start "" ".venv\Scripts\pythonw.exe" -m yizi.launch
   exit /b 0

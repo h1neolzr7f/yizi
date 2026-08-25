@@ -107,7 +107,8 @@ label { display: grid; gap: 6px; font-size: 12px; color: var(--muted); }
 .drop-zone.over { border-color: var(--gold); background: #221c12; }
 .workspace.over, .stage-wrap.over { outline: 2px dashed var(--gold); outline-offset: -8px; }
 body.file-over { cursor: copy; }
-.drop-zone h1 { margin: 0 0 14px; font-size: 36px; line-height: 1.25; letter-spacing: 0.02em; }
+.drop-zone h1 { margin: 0 0 10px; font-size: 36px; line-height: 1.25; letter-spacing: 0.04em; }
+.drop-zone .lead { margin: 0 0 16px; font-size: 18px; color: #d7d0c3; }
 .welcome-actions { display: flex; justify-content: center; gap: 12px; margin: 24px 0 8px; flex-wrap: wrap; }
 .steps {
   display: grid;
