@@ -1,0 +1,18 @@
+name: 想加什么
+description: 主路径上缺的能力，或文案/嵌字不好用
+title: "[想法] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: want
+    attributes:
+      label: 你想完成什么
+      placeholder: 用已经导入的成页就能做的事。不要提生新页、生新图。
+    validations:
+      required: true
+  - type: textarea
+    id: now
+    attributes:
+      label: 现在卡在哪
+    validations:
+      required: true

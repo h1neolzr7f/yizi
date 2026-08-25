@@ -4,6 +4,11 @@ version = "1.0.0"
 description = "AI漫画编剧大师：成页已经画好了，按原框写出能读的中文。不生新页，不生图。"
 requires-python = ">=3.11"
 readme = "README.md"
+license = { text = "MIT" }
+
+[project.urls]
+Homepage = "https://github.com/h1neolzr7f/yizi"
+Releases = "https://github.com/h1neolzr7f/yizi/releases/tag/v1.0.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

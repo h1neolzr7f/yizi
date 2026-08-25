@@ -1,0 +1,41 @@
+name: 出问题了
+description: 检出、看图、写词、嵌字或导出不对
+title: "[问题] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        产品名是 **AI漫画编剧大师**。不要上传 `user_data/`、API Key 或未授权的成页。
+  - type: textarea
+    id: happen
+    attributes:
+      label: 实际发生了什么
+      placeholder: 例如：点「用这几句话回填全部」后，本页框是空的。
+    validations:
+      required: true
+  - type: textarea
+    id: expect
+    attributes:
+      label: 你以为会怎样
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 怎么复现
+      placeholder: 导入几页、有没有填 Key、点了哪个按钮。
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      placeholder: 1.0.0 或 commit
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 确认
+      options:
+        - label: 这段描述里没有 Key、也没有别人的成页原图
+          required: true

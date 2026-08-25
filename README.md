@@ -69,6 +69,7 @@ python -m venv .venv
 ## 开源
 
 - 许可证：MIT，见 `LICENSE`
+- 贡献：`CONTRIBUTING.md`；相处：`CODE_OF_CONDUCT.md`；安全：`SECURITY.md`
 - 不要把 `user_data/`、API Key、成页原图提交到仓库
 - 检出模型 Manga-Bubble-YOLO（Apache-2.0）；视觉模型请遵守各自许可证
 
