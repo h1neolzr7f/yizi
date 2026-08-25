@@ -3,15 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI漫画编剧大师</title>
+  <meta name="description" content="译字：成页已经画好了，还差能读的中文。本机看图，按原框写词。不另生新页新图。" />
+  <title>译字 · AI漫画编剧大师</title>
   <link rel="icon" href="/static/yizi.ico" />
-  <link rel="stylesheet" href="/static/app.css?v=20260826f" />
+  <link rel="stylesheet" href="/static/app.css?v=20260826g" />
 </head>
 <body>
   <header class="topbar">
     <div class="brand">
-      <strong>AI漫画编剧大师</strong>
-      <span>成页进来，按已有框设计情节、写出能读的中文</span>
+      <strong>译字 · AI漫画编剧大师</strong>
+      <span>成页已经画好了。按原框填进能读的中文</span>
     </div>
     <div class="top-center">
       <select id="projectPick" class="project-pick" title="切换剧本" hidden></select>
@@ -29,22 +30,22 @@
     </nav>
   </header>
 
-  <p id="letterHint" class="coach">写下几句话。点「用这几句话回填全部」：先看图，再按页回填已有框。不生成新页新框。</p>
+  <p id="letterHint" class="coach">写几句你想讲的。点「用这几句话回填全部」：本机看图，再按已有框填词。不另生新页新图。</p>
 
   <main id="welcome" class="welcome">
     <div id="dropZone" class="drop-zone">
-      <h1>AI漫画编剧大师</h1>
-      <p>不会写剧情也没关系。把成页或整个文件夹拖进来，写几句话，点「回填全部成页」：先定情节，再按阅读序一页页填框。不另生新页新框。</p>
+      <h1>成页已经画好了。<br />还差能读的中文。</h1>
+      <p>不会写剧情也没关系。把成页或整个文件夹拖进来，写几句你想讲的，点「用这几句话回填全部」。图只在本机看，词嵌进已有的框。不另生新页新图。</p>
       <div class="welcome-actions">
         <button type="button" id="btnImportHero" class="gold large">选择图片</button>
         <button type="button" id="btnImportFolder" class="ghost large">选择文件夹</button>
         <button type="button" id="btnDemoHero" class="ghost large">先用两页示例试试</button>
       </div>
       <ol class="steps">
-        <li><em>1</em>导入成页，检出或手加框</li>
-        <li><em>2</em>写几句话</li>
-        <li><em>3</em>AI 按已有框设计情节</li>
-        <li><em>4</em>填进这些框，改完再导出</li>
+        <li><em>1</em>导入成页，排出阅读序</li>
+        <li><em>2</em>写几句你想讲的</li>
+        <li><em>3</em>本机看图，按已有框写词</li>
+        <li><em>4</em>改完再导出，不另生新页</li>
       </ol>
     </div>
   </main>
@@ -269,7 +270,7 @@
       <h2>设置</h2>
       <section class="settings-block">
         <h3>1. 编剧 API（推荐）</h3>
-        <p class="tiny">填 OpenAI 兼容接口即可，例如官方 DeepSeek。模型名必须小写，例如 <code>deepseek-chat</code>。不填或余额不足时用本机草稿，界面会标明，不会假装接口写成了。</p>
+        <p class="tiny">编剧只写词，不看图。官方 DeepSeek 或任何 OpenAI 兼容接口都行。模型名小写，例如 <code>deepseek-chat</code>。没 Key 或余额不够时用本机草稿，界面会写明，不会假装接口写成了。</p>
         <label>API 地址
           <input id="setApiBase" placeholder="https://api.deepseek.com/v1" />
         </label>
@@ -287,7 +288,7 @@
       </section>
       <section class="settings-block">
         <h3>2. 本机看图</h3>
-        <p class="tiny">图只在本机看，不上网。编剧接口只收场景卡、大纲和框的版式，不收原图。</p>
+        <p class="tiny">图只在这台电脑上看，不上网。编剧接口只收场景卡、大纲和框的版式，收不到原图。</p>
         <label>看图模型
           <select id="setLetterVision">
             <option value="qwen3vl_4b">默认：Qwen3-VL-4B Q4</option>
@@ -325,6 +326,6 @@
     </div>
   </div>
   <div id="toast" class="toast" hidden></div>
-  <script src="/static/app.js?v=20260826f"></script>
+  <script src="/static/app.js?v=20260826g"></script>
 </body>
 </html>

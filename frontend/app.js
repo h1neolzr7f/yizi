@@ -141,8 +141,8 @@ async function loadSettings() {
   }
   if ($("storyHint")) {
     $("storyHint").textContent = set.api_key_set
-      ? "编剧 API 已接。按已有框写词嵌进成页，不生成新页新框。挂了会标明并改用本机草稿。"
-      : "没填 Key 也能组装。会先看图，再按已有框用本机草稿填进去。不生成新页新框。";
+      ? "编剧 API 已接。按 Pixiv 短篇口吻写，再嵌进已有框。挂了会标明，并改用本机草稿。"
+      : "没填 Key 也能走完：本机看图，再按已有框用草稿填进去。不另生新页新图。";
   }
   $("engineChip").classList.remove("warn");
   $("setLetterVision").value = set.lettering_vision || "qwen3vl_4b";
@@ -179,14 +179,14 @@ function showWorkspace(on) {
 
 function coachText() {
   const p = page();
-  if (!pages().length) return "把成页或整个文件夹拖进来。写下几句话，点「用这几句话回填全部」。";
-  if (!(state.project?.premise || "").trim()) return "页已导入。右边写几句你想讲的，不必完整。";
-  if (!(state.project?.expanded || state.project?.outline || "").trim()) return "点「用这几句话回填全部」：先看图、构造情节，再按页填框。";
-  if (!regions().length) return "故事有了。点「回填全部成页」会按阅读序检出并填框。";
-  if (!p.scene) return "框有了。点「回填全部成页」或先看图再按框写词。";
+  if (!pages().length) return "把成页或整个文件夹拖进来。写几句你想讲的，点「用这几句话回填全部」。";
+  if (!(state.project?.premise || "").trim()) return "页已进来。右边写几句你想讲的就够，不必先写成大纲。";
+  if (!(state.project?.expanded || state.project?.outline || "").trim()) return "点「用这几句话回填全部」：本机先看图，再按页上已有的框填词。";
+  if (!regions().length) return "故事有了。点「回填全部成页」，按阅读序检出并填进已有框。";
+  if (!p.scene) return "框有了。点「回填全部成页」，或先看图再按框写词。";
   if (!regions().some((item) => item.text && !item.skip)) return "还有空框。点「回填全部成页」按页填，或点「按框写词」只写本页。";
-  if (p.regions.some((item) => item.overflow)) return "有框装不下。改短一点或拉大框。词改完会写回文字层。";
-  return "双击框改词，拖角改大小。Shift 多选，Delete 删框，可合并碎框。";
+  if (p.regions.some((item) => item.overflow)) return "有框装不下。改短一点，或把框拉大。词改完会写回文字层。";
+  return "双击框改词，拖角改大小。满意了再导出。不另生新页新图。";
 }
 
 function fillIfIdle(id, value) {
