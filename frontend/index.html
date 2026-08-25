@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI漫画编剧大师</title>
+  <link rel="icon" href="/static/yizi.ico" />
+  <link rel="stylesheet" href="/static/app.css?v=20260826f" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <strong>AI漫画编剧大师</strong>
+      <span>成页进来，按已有框设计情节、写出能读的中文</span>
+    </div>
+    <div class="top-center">
+      <select id="projectPick" class="project-pick" title="切换剧本" hidden></select>
+      <input id="projectName" class="project-name" placeholder="未命名剧本" />
+      <button type="button" id="btnNewProject" class="ghost mini">新剧本</button>
+      <button type="button" id="btnDeleteProject" class="danger mini">删剧本</button>
+      <span id="engineChip" class="chip">本机写词</span>
+      <span id="visionChip" class="chip dim">本机视觉未就绪</span>
+    </div>
+    <nav class="top-actions">
+      <button type="button" id="btnImport" class="gold">导入成页</button>
+      <button type="button" id="btnDemo" class="ghost">先看一眼</button>
+      <button type="button" id="btnExportZip" class="ghost">导出整组</button>
+      <button type="button" id="btnSettings" class="ghost">设置</button>
+    </nav>
+  </header>
+
+  <p id="letterHint" class="coach">写下几句话。点「用这几句话回填全部」：先看图，再按页回填已有框。不生成新页新框。</p>
+
+  <main id="welcome" class="welcome">
+    <div id="dropZone" class="drop-zone">
+      <h1>AI漫画编剧大师</h1>
+      <p>不会写剧情也没关系。把成页或整个文件夹拖进来，写几句话，点「回填全部成页」：先定情节，再按阅读序一页页填框。不另生新页新框。</p>
+      <div class="welcome-actions">
+        <button type="button" id="btnImportHero" class="gold large">选择图片</button>
+        <button type="button" id="btnImportFolder" class="ghost large">选择文件夹</button>
+        <button type="button" id="btnDemoHero" class="ghost large">先用两页示例试试</button>
+      </div>
+      <ol class="steps">
+        <li><em>1</em>导入成页，检出或手加框</li>
+        <li><em>2</em>写几句话</li>
+        <li><em>3</em>AI 按已有框设计情节</li>
+        <li><em>4</em>填进这些框，改完再导出</li>
+      </ol>
+    </div>
+  </main>
+
+  <main id="workspace" class="workspace" hidden>
+    <aside class="rail">
+      <div class="pane-head">
+        <span>阅读序</span>
+        <span id="pageCount" class="muted"></span>
+      </div>
+      <p class="tiny">拖动卡片改阅读顺序。也可把文件夹拖进来。卡片上可删。快捷键 A / D 翻页。</p>
+      <div class="rail-actions">
+        <button type="button" id="btnPageAdd" class="ghost mini">再导入</button>
+        <button type="button" id="btnPageAddFolder" class="ghost mini">导入文件夹</button>
+        <button type="button" id="btnPageClear" class="danger mini">清空</button>
+      </div>
+      <div id="pageList" class="page-list"></div>
+    </aside>
+
+    <section class="stage-col">
+      <div class="stage-tools">
+        <div class="seg" role="group">
+          <button type="button" id="btnViewSource" class="active">原页</button>
+          <button type="button" id="btnViewPreview">合成预览</button>
+        </div>
+        <button type="button" id="btnFit" class="ghost mini">适应窗口</button>
+        <span id="zoomLabel" class="muted">100%</span>
+      </div>
+      <div id="stageWrap" class="stage-wrap">
+        <div id="stageHost" class="stage-host">
+          <img id="pageImage" alt="当前成页" />
+          <img id="layerErase" class="layer-img" alt="" hidden />
+          <img id="layerText" class="layer-img" alt="" hidden />
+          <div id="letterOverlay" class="letter-overlay"></div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="dock">
+      <section class="pane story-pane">
+        <header class="pane-title">
+          <div>
+            <p class="kicker">第一步 · 故事</p>
+            <h2>情节设计</h2>
+          </div>
+          <span class="pane-head-actions">
+            <span id="letterEngine" class="muted">本机写词</span>
+            <button type="button" id="btnStoryClear" class="ghost mini">清空</button>
+          </span>
+        </header>
+        <ol id="storySteps" class="story-steps">
+          <li data-step="1">写几句</li>
+          <li data-step="2">扩写定调</li>
+          <li data-step="3">按框嵌页</li>
+        </ol>
+        <label>随便写几句
+          <textarea id="storyPremise" rows="4" placeholder="例：三个女生在港口认系船柱，越讲越跑偏。有人认真，有人抬杠。"></textarea>
+        </label>
+        <div class="row">
+          <label>谁 <input id="storyCast" placeholder="可空，组装时会补" /></label>
+          <label>基调 <input id="storyTone" placeholder="可空，组装时会定" /></label>
+        </div>
+        <button type="button" id="btnStoryAssemble" class="gold">用这几句话回填全部</button>
+        <div class="letter-primary">
+          <button type="button" id="btnStoryDesign" class="ghost">只扩写定调</button>
+          <button type="button" id="btnStoryUndo" class="ghost" hidden>撤销上次组装</button>
+          <button type="button" id="btnStoryWritePage" class="ghost">按框写本页</button>
+          <button type="button" id="btnStoryWriteAll" class="ghost">按框写整组</button>
+        </div>
+        <label>扩写
+          <textarea id="storyExpanded" rows="4" placeholder="像 Pixiv 短篇那样写一段能读的故事，可改"></textarea>
+        </label>
+        <label>写法
+          <input id="storyStyle" placeholder="短句抬杠，收在余韵上…" />
+        </label>
+        <label>全书大纲
+          <textarea id="letterOutline" rows="4" placeholder="每页一行，有画面和没说完的那一点，可改"></textarea>
+        </label>
+        <p id="storyHint" class="tiny">剧情说明按 Pixiv 短篇口吻写：有风、有人、有余韵，不是分镜表。再按页回填已有框。锁框不动。</p>
+      </section>
+
+      <section class="pane">
+        <header class="pane-title">
+          <div>
+            <p class="kicker">第二步 · 成页</p>
+            <h2>看图认画面</h2>
+          </div>
+        </header>
+        <div class="letter-primary">
+          <button type="button" id="btnLetterRun" class="gold">处理好本页</button>
+          <button type="button" id="btnLetterRunAll" class="ghost">回填全部成页</button>
+        </div>
+        <p class="tiny">「回填全部成页」会按阅读序一页页检出、看图、写词、铺层。工程稿可改。</p>
+        <div class="layer-stack">
+          <div class="pane-head">
+            <span>图层</span>
+            <span class="muted">像 PS 一样叠着改</span>
+          </div>
+          <div id="layerList" class="layer-list"></div>
+          <button type="button" id="btnLetterTypeset" class="gold">更新图层</button>
+        </div>
+        <div class="letter-tools">
+          <div>
+            <span>框</span>
+            <button type="button" id="btnLetterDetect">检出</button>
+            <button type="button" id="btnLetterAddBox">手加</button>
+            <button type="button" id="btnLetterPrune">清碎框</button>
+            <button type="button" id="btnLetterMerge">合并</button>
+          </div>
+          <div>
+            <span>看</span>
+            <button type="button" id="btnLetterSee">看这一页</button>
+            <button type="button" id="btnLetterSeeForce">重看</button>
+          </div>
+          <div>
+            <span>词</span>
+            <button type="button" id="btnLetterWrite">写词</button>
+            <button type="button" id="btnLetterWritePage">重写页</button>
+            <button type="button" id="btnLetterWriteRegion">重写框</button>
+            <button type="button" id="btnLetterWriteAll">整组重写</button>
+          </div>
+          <div>
+            <span>出</span>
+            <button type="button" id="btnExportPage">导出本页 PNG</button>
+            <button type="button" id="btnExportLayers">图层 ZIP</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="pane scene-card">
+        <div class="pane-head">
+          <span>本页场景卡</span>
+          <span class="pane-head-actions">
+            <span id="letterSceneSrc" class="muted">还没看图</span>
+            <button type="button" id="btnSceneWrite" class="gold mini">按框写词</button>
+            <button type="button" id="btnSceneClear" class="ghost mini">清空</button>
+          </span>
+        </div>
+        <p class="tiny">看图只出场景卡。写词按这一页已有的框来填，不另开新框。改过的卡会锁成「人定」。</p>
+        <div class="scene-grid">
+          <label class="span2">在哪
+            <textarea id="scWhere" rows="2" placeholder="白天港口码头，左侧有桩和海面"></textarea>
+          </label>
+          <label class="span2">谁在画面里
+            <textarea id="scWho" rows="2" placeholder="左：短发女生站桩旁；右：浅发女生侧身看她"></textarea>
+          </label>
+          <label class="span2">每人在干什么
+            <textarea id="scDoing" rows="4" placeholder="上格：左边的人伸手点桩，右边的人歪头看。下格：浅发女生往前走。"></textarea>
+          </label>
+          <label>口气 <input id="scMood" placeholder="偏热 / 偏冷" /></label>
+          <label>跟上页 <input id="scJump" placeholder="跳场 / 同一场" /></label>
+          <label>亲密度
+            <select id="scIntimacy">
+              <option value="none">无</option>
+              <option value="suggestive">暗示</option>
+              <option value="explicit">露骨（只写进场景卡，图不上网）</option>
+            </select>
+          </label>
+          <label class="span2">本页画面 <input id="scSummary" placeholder="投稿小说一句：看见什么，还剩哪一点没说完" /></label>
+          <label class="span2">分镜细节
+            <textarea id="scNotes" rows="3" placeholder="从上到下每格一句"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="pane">
+        <div class="pane-head">
+          <span>文字框</span>
+          <span class="pane-head-actions">
+            <span id="letterCount" class="muted">0 框</span>
+            <button type="button" id="btnRegionsClear" class="danger mini">清空</button>
+          </span>
+        </div>
+        <div id="letterRegions" class="letter-regions"></div>
+        <div id="letterEditor" class="letter-editor" hidden>
+          <label>台词
+            <textarea id="lrText" rows="3"></textarea>
+          </label>
+          <label>更短备选 <input id="lrShort" /></label>
+          <label>说话人 <input id="lrSpeaker" /></label>
+          <div class="row">
+            <label>类型
+              <select id="lrKind">
+                <option value="dialogue">对白</option>
+                <option value="narration">旁白</option>
+                <option value="thought">内心</option>
+                <option value="sfx">拟声</option>
+              </select>
+            </label>
+            <label>方向
+              <select id="lrDir">
+                <option value="horizontal">横排</option>
+                <option value="vertical">竖排</option>
+              </select>
+            </label>
+          </div>
+          <div class="row geo">
+            <label>X <input id="lrX" type="number" /></label>
+            <label>Y <input id="lrY" type="number" /></label>
+            <label>宽 <input id="lrW" type="number" /></label>
+            <label>高 <input id="lrH" type="number" /></label>
+          </div>
+          <div class="row">
+            <label class="check"><input id="lrSkip" type="checkbox" /> 不替换</label>
+            <label class="check"><input id="lrLock" type="checkbox" /> 锁定</label>
+          </div>
+          <p id="lrMeta" class="tiny"></p>
+          <div class="row">
+            <button type="button" id="btnLetterSaveBox" class="gold">写下这一框</button>
+            <button type="button" id="btnLetterDelBox" class="danger">删框</button>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <input id="filePick" type="file" accept="image/png,image/jpeg,image/webp" multiple hidden />
+  <input id="folderPick" type="file" webkitdirectory multiple hidden />
+
+  <dialog id="settingsDlg" class="modal">
+    <form method="dialog" id="settingsForm">
+      <h2>设置</h2>
+      <section class="settings-block">
+        <h3>1. 编剧 API（推荐）</h3>
+        <p class="tiny">填 OpenAI 兼容接口即可，例如官方 DeepSeek。模型名必须小写，例如 <code>deepseek-chat</code>。不填或余额不足时用本机草稿，界面会标明，不会假装接口写成了。</p>
+        <label>API 地址
+          <input id="setApiBase" placeholder="https://api.deepseek.com/v1" />
+        </label>
+        <label>编剧模型（必须小写）
+          <input id="setWriterModel" placeholder="deepseek-chat" />
+        </label>
+        <label>API Key（只当编剧，不看图）
+          <input id="setApiKey" type="password" autocomplete="off" placeholder="不填则本机按场景卡写草稿" />
+        </label>
+        <div class="row">
+          <button type="button" id="btnTestWriter" class="ghost">测一下通不通</button>
+          <button type="button" id="btnClearApiKey" class="danger mini">清除 Key</button>
+        </div>
+        <p id="setWriterHint" class="tiny"></p>
+      </section>
+      <section class="settings-block">
+        <h3>2. 本机看图</h3>
+        <p class="tiny">图只在本机看，不上网。编剧接口只收场景卡、大纲和框的版式，不收原图。</p>
+        <label>看图模型
+          <select id="setLetterVision">
+            <option value="qwen3vl_4b">默认：Qwen3-VL-4B Q4</option>
+            <option value="qwen3vl_2b">省显存：Qwen3-VL-2B</option>
+            <option value="joycaption_q3">露骨更准：JoyCaption Q3（需手放模型）</option>
+            <option value="off">关闭，只用几何反推</option>
+          </select>
+        </label>
+        <p id="setVisionHint" class="tiny"></p>
+        <button type="button" id="btnPrepareVision" class="ghost">准备本机视觉</button>
+      </section>
+      <section class="settings-block">
+        <h3>3. 文字框检出</h3>
+        <label>检出方式
+          <select id="setLetterDetect">
+            <option value="auto">自动：有 YOLO 用 YOLO，否则几何</option>
+            <option value="yolo">本机 YOLO 泡框（Manga-Bubble-YOLO）</option>
+            <option value="cv">只用几何反推</option>
+          </select>
+        </label>
+        <p id="setDetectHint" class="tiny"></p>
+        <button type="button" id="btnPrepareDetect" class="ghost">准备框检出模型（约 6MB）</button>
+      </section>
+      <menu>
+        <button type="button" id="btnSettingsCancel" class="ghost" value="cancel">取消</button>
+        <button type="submit" class="gold" value="save">保存</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <div id="busy" class="busy" hidden>
+    <div class="busy-card">
+      <div class="spin"></div>
+      <p id="busyText">进行中…</p>
+    </div>
+  </div>
+  <div id="toast" class="toast" hidden></div>
+  <script src="/static/app.js?v=20260826f"></script>
+</body>
+</html>

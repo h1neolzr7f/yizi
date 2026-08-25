@@ -8,9 +8,16 @@ __pycache__/
 .ruff_cache/
 dist/
 build/
+release/
 user_data/
 .env
 .env.*
 *.log
+*.gguf
+*.onnx
+*.zip
 .DS_Store
 Thumbs.db
+.cursor/
+scripts/_audit_pages.py
+scripts/_peek_project.py
