@@ -1,6 +1,8 @@
-# AI 漫画编剧大师
+# yizi · 本机漫画对白工作台
 
 一个在本机整理漫画成页、识别既有文字框并回填中文对白的工具。它处理已经画好的页面，不生成新页或新图。
+
+> **和 [Manga-NAI-GPT](https://github.com/h1neolzr7f/Manga-NAI-GPT) 的区别**：Manga-NAI-GPT 做页内修图（换角色、改字幕擦字重嵌、去字、分层、AI 生图）。**yizi** 专注「已有字框上的编剧 / 嵌字」：读入成页 → 检出原文字框 → 写中文对白 → 独立文字层导出，不负责换角或重绘画面。
 
 [v1.0.0 源码 Release](https://github.com/h1neolzr7f/yizi/releases/tag/v1.0.0) · [参与贡献](CONTRIBUTING.md) · [安全说明](SECURITY.md)
 
